@@ -10,10 +10,12 @@ public class Habit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    private Long id;
     private String name;
     private String description;
+
+    public Habit() {}
 
     public Habit(String name, String description) {
         this.name = name;
@@ -23,9 +25,11 @@ public class Habit {
     public Long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
+
     public String getDescription() {
         return description;
     }
@@ -33,9 +37,11 @@ public class Habit {
     public void setId(Long id) {
         this.id = id;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
