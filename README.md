@@ -1,54 +1,28 @@
 # daily-done
 
+# Teammitglieder
+
+- Isnije Mahmudi
+
+----
+
 ## Projektbeschreibung
 
-DailyDone ist ein Uni-Projekt, bei dem ich eine einfache Web-App zum Tracken von Gewohnheiten (Habits) entwickle.  
-Ziel ist es, eigene Habits anzulegen, zu speichern und später visuell darzustellen.  
-Ich arbeite alleine an diesem Projekt. Der Fokus liegt in M1 auf dem Backend mit Spring Boot – das Frontend (Vue.js) folgt in M2.
+DailyDone ist ein Uni-Projekt, bei dem ich eine einfache Web-App zum Tracken von Gewohnheiten (Habits) 
+entwickle. Ziel der Anwendung ist es, Nutzer:innen die Möglichkeit zu geben, eigene Gewohnheiten anzulegen,
+zu speichern und später visuell darzustellen. Die App hilft dabei, tägliche Routinen wie „Wasser trinken“, 
+„10 Minuten lesen“ oder „Sport treiben“ im Blick zu behalten. Nutzer:innen können jeden Tag abhaken, ob sie 
+ihre gesetzten Gewohnheiten erfüllt haben. So wird der eigene Fortschritt sichtbar gemacht und es fällt leichter, motiviert dranzubleiben.
 
 ---
 
-## Startanleitung
+## Geplante Funktionen (Use Cases)
 
-### Voraussetzungen
-- Java 17 muss installiert sein
-- Maven (oder alternativ der mitgelieferte Maven Wrapper `./mvnw`)
+1. ➕ Neue Gewohnheiten erstellen
+2. ❌ Gewohnheiten löschen
+3. ✏️ Gewohnheiten bearbeiten
+4. ✅ Täglich abhaken, ob die Gewohnheit erledigt wurde
+5. 📋 Übersicht über alle Gewohnheiten
+6. 📅 Kalender-Ansicht
+7. 🔍 Gewohnheiten nach Kategorie filtern
 
-### Projekt starten
-
-1. Projekt klonen  
-   git clone https://github.com/DEIN-GITHUB-NAME/daily-done.git
-
-2. App starten  
-   ./mvnw spring-boot:run
-
-3. Im Browser aufrufen  
-   http://localhost:8080/api/habits
-
-Wenn alles funktioniert, sollte im Browser die Nachricht **"Hello from DailyDone!"** erscheinen.
-
----
-
-## Verwendete Technologien
-
-- Java 17
-- Spring Boot
-- Maven
-
----
-
-## Aktueller Stand – M1
-
-- [x] Projektidee gewählt
-- [x] GitHub-Repo erstellt
-- [x] Spring Boot Projekt aufgesetzt
-- [x] Erste Entity `Habit` erstellt
-- [x] GET-Route `/api/habits` implementiert
-- [x] README hinzugefügt
-- [x] Projekt läuft lokal erfolgreich
-
----
-
-## Hinweis
-
-Ich arbeite alleine an diesem Projekt im Rahmen einer Studienleistung.
