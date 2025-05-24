@@ -1,3 +1,5 @@
+com/dailydone/dailydone/InitHabits.class
 com/dailydone/dailydone/DailydoneApplication.class
+com/dailydone/dailydone/HabitRepository.class
 com/dailydone/dailydone/HabitController.class
 com/dailydone/dailydone/Habit.class
