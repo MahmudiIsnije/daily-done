@@ -1,8 +1,9 @@
-FROM gradle:jdk21-jammy AS build
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
-RUN gradle build --no-daemon
+FROM eclipse-temurin:17-jdk
 
-FROM eclipse-temurin:21-jdk-jammy
-COPY --from=build /home/gradle/src/build/libs/dailydone-0.0.1-SNAPSHOT.jar app.jar
+VOLUME /tmp
+
+ARG JAR_FILE=target/dailydone-0.0.1-SNAPSHOT.jar
+
+COPY ${JAR_FILE} app.jar
+
 ENTRYPOINT ["java","-jar","/app.jar"]
