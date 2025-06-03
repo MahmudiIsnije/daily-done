@@ -1,5 +1,6 @@
-com/dailydone/dailydone/InitHabits.class
 com/dailydone/dailydone/DailydoneApplication.class
 com/dailydone/dailydone/HabitRepository.class
 com/dailydone/dailydone/HabitController.class
+com/dailydone/dailydone/CustomCorsFilter.class
 com/dailydone/dailydone/Habit.class
+com/dailydone/dailydone/InitHabits.class
