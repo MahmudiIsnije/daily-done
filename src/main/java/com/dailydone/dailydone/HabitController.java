@@ -6,7 +6,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/habits")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 
 public class HabitController {
 
@@ -21,6 +20,7 @@ public class HabitController {
         return habitRepository.findAll();
     }
 
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping
     public Habit createHabit(@RequestBody Habit habit) {
         return habitRepository.save(habit);
