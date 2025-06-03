@@ -25,4 +25,9 @@ public class HabitController {
     public Habit createHabit(@RequestBody Habit habit) {
         return habitRepository.save(habit);
     }
+    
+    @DeleteMapping("/{id}")
+    public void deleteHabit(@PathVariable Long id) {
+        habitRepository.deleteById(id);
+    }
 }
