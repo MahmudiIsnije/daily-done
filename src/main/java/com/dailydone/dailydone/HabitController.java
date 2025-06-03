@@ -25,9 +25,19 @@ public class HabitController {
     public Habit createHabit(@RequestBody Habit habit) {
         return habitRepository.save(habit);
     }
-    
+
     @DeleteMapping("/{id}")
     public void deleteHabit(@PathVariable Long id) {
         habitRepository.deleteById(id);
     }
+
+    @PutMapping("/{id}")
+    public Habit updateHabit(@PathVariable Long id, @RequestBody Habit updated) {
+        return habitRepository.findById(id).map(habit -> {
+            habit.setName(updated.getName());
+            habit.setDescription(updated.getDescription());
+            return habitRepository.save(habit);
+        }).orElseThrow(() -> new RuntimeException("Habit not found"));
+    }
+
 }
