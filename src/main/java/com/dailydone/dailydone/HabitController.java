@@ -20,7 +20,6 @@ public class HabitController {
         return habitRepository.findAll();
     }
 
-    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping
     public Habit createHabit(@RequestBody Habit habit) {
         return habitRepository.save(habit);
