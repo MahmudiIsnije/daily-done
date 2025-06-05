@@ -10,13 +10,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/habits")
-
 public class HabitController {
 
     private final HabitRepository habitRepository;
+    private final HabitCheckRepository habitCheckRepository;
 
-    public HabitController(HabitRepository habitRepository) {
+    public HabitController(HabitRepository habitRepository, HabitCheckRepository habitCheckRepository) {
         this.habitRepository = habitRepository;
+        this.habitCheckRepository = habitCheckRepository;
     }
 
     @GetMapping
@@ -43,8 +44,6 @@ public class HabitController {
         }).orElseThrow(() -> new RuntimeException("Habit not found"));
     }
 
-    @Autowired
-    private HabitCheckRepository habitCheckRepository;
 
     @PostMapping("/{id}/check")
     public ResponseEntity<HabitCheck> checkHabit(@PathVariable Long id) {
@@ -55,7 +54,6 @@ public class HabitController {
 
         LocalDate today = LocalDate.now();
 
-        // Nur speichern, wenn noch nicht abgehakt heute
         boolean alreadyChecked = !habitCheckRepository.findByHabitIdAndDate(id, today).isEmpty();
         if (alreadyChecked) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409
