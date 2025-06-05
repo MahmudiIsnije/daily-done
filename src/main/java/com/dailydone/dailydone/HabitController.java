@@ -1,7 +1,11 @@
 package com.dailydone.dailydone;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,4 +43,27 @@ public class HabitController {
         }).orElseThrow(() -> new RuntimeException("Habit not found"));
     }
 
+    @Autowired
+    private HabitCheckRepository habitCheckRepository;
+
+    @PostMapping("/{id}/check")
+    public ResponseEntity<HabitCheck> checkHabit(@PathVariable Long id) {
+        Habit habit = habitRepository.findById(id).orElse(null);
+        if (habit == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        LocalDate today = LocalDate.now();
+
+        // Nur speichern, wenn noch nicht abgehakt heute
+        boolean alreadyChecked = !habitCheckRepository.findByHabitIdAndDate(id, today).isEmpty();
+        if (alreadyChecked) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409
+        }
+
+        HabitCheck check = new HabitCheck(habit, today);
+        habitCheckRepository.save(check);
+
+        return ResponseEntity.ok(check);
+}
 }
