@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @RestController
@@ -64,4 +65,12 @@ public class HabitController {
 
         return ResponseEntity.ok(check);
 }
+    @GetMapping("/checks/month/{yearMonth}")
+    public List<HabitCheck> getChecksForMonth(@PathVariable String yearMonth) {
+        YearMonth ym = YearMonth.parse(yearMonth); // z. B. "2025-06"
+        LocalDate start = ym.atDay(1);
+        LocalDate end = ym.atEndOfMonth();
+        return habitCheckRepository.findByDateBetween(start, end);
+    }
+
 }

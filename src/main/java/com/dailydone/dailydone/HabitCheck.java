@@ -11,7 +11,7 @@ public class HabitCheck {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToMany
+    @ManyToOne
     private Habit habit;
     private LocalDate date;
 

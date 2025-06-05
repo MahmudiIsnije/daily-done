@@ -24,5 +24,5 @@ ihre gesetzten Gewohnheiten erfüllt haben. So wird der eigene Fortschritt sicht
 4. ✅ Täglich abhaken, ob die Gewohnheit erledigt wurde
 5. 📋 Übersicht über alle Gewohnheiten
 6. 📅 Kalender-Ansicht
-7. 🔍 Gewohnheiten nach Kategorie filtern
+
 
