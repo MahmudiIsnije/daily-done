@@ -6,7 +6,7 @@
 
 ----
 
-## Projektbeschreibung
+## Projektbeschreibung 
 
 DailyDone ist eine benutzerfreundliche Habit-Tracking-App, die entwickelt wurde, 
 um Menschen dabei zu helfen, positive Gewohnheiten aufzubauen und beizubehalten. 
@@ -17,44 +17,42 @@ Streak-Tracking und visueller Fortschrittsverfolgung. Nutzer können ihre tägli
 ---
 
 ## Use Cases
-### 📝 Habit-Management
-➕ Neue Gewohnheiten erstellen
-✏️ Gewohnheiten bearbeiten (inline editing)
-🗑️ Gewohnheiten löschen
-📋 Alle Gewohnheiten anzeigen
+### Habit-Management
+- Neue Gewohnheiten erstellen #
+- Gewohnheiten bearbeiten (inline editing)
+- Gewohnheiten löschen
+- Alle Gewohnheiten anzeigen
 
-### 🎯 Kategorie-System
-🎨 6 vordefinierte Kategorien mit farbigen Icons
-📊 Filter nach Kategorien
-🔄 Habit-Counter pro Kategorie
-🔄 Zwischen "Alle Habits" und Kategorien wechseln
+### Kategorie-System 
+- 6 vordefinierte Kategorien mit farbigen Icons
+- Filter nach Kategorien
+- Habit-Counter pro Kategorie
+- Zwischen "Alle Habits" und Kategorien wechseln
 
-### 🔥 Streak-System
-📈 Aktuelle Streak-Anzeige (Tage hintereinander)
-🏆 Rekord-Streak tracking und Anzeige
-🎯 Motivierende Badges (🔥 aktuell, 🏆 Rekord)
+### Streak-System
+- Aktuelle Streak-Anzeige (Tage hintereinander)
+- Rekord-Streak tracking und Anzeige
+- Motivierende Badges (🔥 aktuell, 🏆 Rekord)
 
-### ✅ Progress-Tracking
-✅ Tägliches Abhaken (einmal pro Tag)
-📊 Progress-Bars für visuellen Fortschritt
-🎯 "Heute erledigt" Status anzeigen
-🚫 Verhinderung von Mehrfach-Checks
+### Progress-Tracking
+- Tägliches Abhaken (einmal pro Tag)
+- Progress-Bars für visuellen Fortschritt
+- "Heute erledigt" Status anzeigen
+- Verhinderung von Mehrfach-Checks
 
-### 📅 Kalender-Integration
+### Kalender-Integration
+- Monats-Kalender mit Aktivitäts-Punkten
+- Farbcodierte Darstellung nach Kategorien
+- Hover-Tooltips mit Habit-Namen
+- "Heute erledigt" Übersicht im Kalender-Bereich
 
-📅 Monats-Kalender mit Aktivitäts-Punkten
-🌈 Farbcodierte Darstellung nach Kategorien
-💡 Hover-Tooltips mit Habit-Namen
-📋 "Heute erledigt" Übersicht im Kalender-Bereich
-
-### 🎨 UI/UX Features
-
-📱 Responsive Design (Desktop + Mobile)
-✨ Smooth Animationen und Hover-Effekte
-🌸 Modernes Pastell-Design mit Glassmorphism
+### UI/UX Features
+- Responsive Design (Desktop + Mobile)
+- Smooth Animationen und Hover-Effekte
+- Modernes Pastell-Design mit Glassmorphism
 
 
-## 🛠️ Technologie-Stack
+## Technologie-Stack
 - Backend
 
 Spring Boot (Java)
