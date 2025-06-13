@@ -6,19 +6,19 @@
 
 ----
 
-## Projektbeschreibung 
-
-DailyDone ist eine benutzerfreundliche Habit-Tracking-App, die entwickelt wurde, 
-um Menschen dabei zu helfen, positive Gewohnheiten aufzubauen und beizubehalten. 
+## Projektbeschreibung
+DailyDone ist eine benutzerfreundliche Habit-Tracking-App, die entwickelt wurde,
+um Menschen dabei zu helfen, positive Gewohnheiten aufzubauen und beizubehalten.
 Mit einem modernen Pastell-Design und motivierenden Features macht es Spaß, täglich Fortschritte zu verfolgen.
-Die App bietet ein umfassendes System zum Verwalten von Gewohnheiten mit Kategorien, 
-Streak-Tracking und visueller Fortschrittsverfolgung. Nutzer können ihre täglichen Routinen wie 
+Die App bietet ein umfassendes System zum Verwalten von Gewohnheiten mit Kategorien,
+Streak-Tracking und visueller Fortschrittsverfolgung. Nutzer können ihre täglichen Routinen wie
 „Wasser trinken", „Joggen gehen" oder „Buch lesen" organisiert verfolgen und durch das Streak-System zusätzlich motiviert werden.
+
 ---
 
 ## Use Cases
 ### Habit-Management
-- Neue Gewohnheiten erstellen #
+- Neue Gewohnheiten erstellen
 - Gewohnheiten bearbeiten (inline editing)
 - Gewohnheiten löschen
 - Alle Gewohnheiten anzeigen
