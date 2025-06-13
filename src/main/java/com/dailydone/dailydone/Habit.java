@@ -1,9 +1,6 @@
 package com.dailydone.dailydone;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Habit {
@@ -12,14 +9,20 @@ public class Habit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
+
     private String name;
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     public Habit() {}
 
-    public Habit(String name, String description) {
+    public Habit(String name, String description, Category category) {
         this.name = name;
         this.description = description;
+        this.category = category;
     }
 
     public Long getId() {
@@ -44,5 +47,12 @@ public class Habit {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
