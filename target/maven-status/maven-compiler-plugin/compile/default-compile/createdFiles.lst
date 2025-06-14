@@ -4,4 +4,7 @@ com/dailydone/dailydone/HabitRepository.class
 com/dailydone/dailydone/HabitController.class
 com/dailydone/dailydone/Habit.class
 com/dailydone/dailydone/InitHabits.class
+com/dailydone/dailydone/CategoryRepository.class
+com/dailydone/dailydone/Category.class
 com/dailydone/dailydone/HabitCheck.class
+com/dailydone/dailydone/CategoryController.class

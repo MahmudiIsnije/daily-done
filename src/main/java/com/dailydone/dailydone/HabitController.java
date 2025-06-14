@@ -1,7 +1,11 @@
 package com.dailydone.dailydone;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -28,30 +32,53 @@ public class HabitController {
     }
 
     @PostMapping
-    public Habit createHabit(@RequestBody Habit habit) {
-        return habitRepository.save(habit);
+    public ResponseEntity<?> createHabit(@Valid @RequestBody Habit habit, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        Habit savedHabit = habitRepository.save(habit);
+        return ResponseEntity.ok(savedHabit);
     }
 
     @PutMapping("/{id}")
-    public Habit updateHabit(@PathVariable Long id, @RequestBody Habit habitDetails) {
+    public ResponseEntity<?> updateHabit(@PathVariable Long id, @Valid @RequestBody Habit habitDetails, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         Optional<Habit> optionalHabit = habitRepository.findById(id);
         if (optionalHabit.isPresent()) {
             Habit habit = optionalHabit.get();
             habit.setName(habitDetails.getName());
             habit.setDescription(habitDetails.getDescription());
             habit.setCategory(habitDetails.getCategory());
-            return habitRepository.save(habit);
+            return ResponseEntity.ok(habitRepository.save(habit));
         }
-        throw new RuntimeException("Habit nicht gefunden mit ID: " + id);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "Habit nicht gefunden mit ID: " + id));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteHabit(@PathVariable Long id) {
-        habitRepository.deleteById(id);
+    public ResponseEntity<?> deleteHabit(@PathVariable Long id) {
+        if (habitRepository.existsById(id)) {
+            habitRepository.deleteById(id);
+            return ResponseEntity.ok(Map.of("message", "Habit erfolgreich gelöscht"));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "Habit nicht gefunden mit ID: " + id));
     }
 
     @PostMapping("/{id}/check")
-    public HabitCheck checkHabit(@PathVariable Long id) {
+    public ResponseEntity<?> checkHabit(@PathVariable Long id) {
         LocalDate today = LocalDate.now();
 
         // Prüfen ob heute bereits abgehakt
@@ -59,18 +86,61 @@ public class HabitController {
                 .findByHabitIdAndDate(id, today);
 
         if (existingCheck.isPresent()) {
-            throw new RuntimeException("Habit bereits heute abgehakt");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Habit bereits heute abgehakt"));
         }
 
         // Neuen Check erstellen
-        Habit habit = habitRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Habit nicht gefunden"));
+        Optional<Habit> optionalHabit = habitRepository.findById(id);
+        if (optionalHabit.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Habit nicht gefunden"));
+        }
 
         HabitCheck check = new HabitCheck();
-        check.setHabit(habit);
+        check.setHabit(optionalHabit.get());
         check.setDate(today);
 
-        return habitCheckRepository.save(check);
+        return ResponseEntity.ok(habitCheckRepository.save(check));
+    }
+
+    @PatchMapping("/{id}/toggle")
+    public ResponseEntity<?> toggleHabitStatus(@PathVariable Long id) {
+        LocalDate today = LocalDate.now();
+
+        // Prüfen ob Habit existiert
+        Optional<Habit> optionalHabit = habitRepository.findById(id);
+        if (optionalHabit.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Habit nicht gefunden mit ID: " + id));
+        }
+
+        // Prüfen ob heute bereits abgehakt
+        Optional<HabitCheck> existingCheck = habitCheckRepository
+                .findByHabitIdAndDate(id, today);
+
+        if (existingCheck.isPresent()) {
+            // Uncheck: Lösche den heutigen Check
+            habitCheckRepository.delete(existingCheck.get());
+            return ResponseEntity.ok(Map.of(
+                    "message", "Habit erfolgreich als unerledigt markiert",
+                    "status", "unchecked",
+                    "date", today.toString()
+            ));
+        } else {
+            // Check: Erstelle neuen Check
+            HabitCheck check = new HabitCheck();
+            check.setHabit(optionalHabit.get());
+            check.setDate(today);
+            HabitCheck savedCheck = habitCheckRepository.save(check);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Habit erfolgreich als erledigt markiert",
+                    "status", "checked",
+                    "date", today.toString(),
+                    "check", savedCheck
+            ));
+        }
     }
 
     @GetMapping("/checks/month/{yearMonth}")
@@ -78,19 +148,19 @@ public class HabitController {
         return habitCheckRepository.findAll();
     }
 
-    // NEUE STREAK-ENDPOINTS
     @GetMapping("/{id}/streaks")
-    public Map<String, Object> getHabitStreaks(@PathVariable Long id) {
+    public ResponseEntity<?> getHabitStreaks(@PathVariable Long id) {
+        if (!habitRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Habit nicht gefunden"));
+        }
+
         Map<String, Object> streaks = new HashMap<>();
-
-        int currentStreak = calculateCurrentStreak(id);
-        int bestStreak = calculateBestStreak(id);
-
-        streaks.put("currentStreak", currentStreak);
-        streaks.put("bestStreak", bestStreak);
+        streaks.put("currentStreak", calculateCurrentStreak(id));
+        streaks.put("bestStreak", calculateBestStreak(id));
         streaks.put("isCheckedToday", isCheckedToday(id));
 
-        return streaks;
+        return ResponseEntity.ok(streaks);
     }
 
     @GetMapping("/streaks/all")
@@ -109,7 +179,7 @@ public class HabitController {
         return allStreaks;
     }
 
-    // STREAK-BERECHNUNGS-METHODEN
+    // Streak-Berechnungen
     private int calculateCurrentStreak(Long habitId) {
         LocalDate today = LocalDate.now();
         LocalDate checkDate = today;
@@ -143,7 +213,7 @@ public class HabitController {
             LocalDate previousDate = checks.get(i - 1).getDate();
             LocalDate currentDate = checks.get(i).getDate();
 
-            // Aufeinanderfolgende Tage?
+            // Aufeinanderfolgende Tage
             if (ChronoUnit.DAYS.between(previousDate, currentDate) == 1) {
                 currentStreak++;
                 maxStreak = Math.max(maxStreak, currentStreak);
