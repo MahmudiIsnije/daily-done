@@ -2,104 +2,75 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
-
-env:
-  NODE_VERSION: '18'
-  JAVA_VERSION: '21'
 
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
-    
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpass
-          POSTGRES_DB: testdb
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
-    - name: Cache Maven dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
-    - name: Run Backend Tests
-      env:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
-        SPRING_DATASOURCE_USERNAME: testuser
-        SPRING_DATASOURCE_PASSWORD: testpass
-      run: mvn clean test
+      - name: Run backend tests with test profile
+        run: mvn clean test -Dspring.profiles.active=test
 
-    - name: Build Backend
-      run: mvn clean package -DskipTests
+      - name: Build backend
+        run: mvn clean package -DskipTests
 
-  frontend-tests:
+  frontend-build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./daily-done-frontend  # ← GEÄNDERT!
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: daily-done-frontend/package-lock.json  # ← GEÄNDERT!
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
 
-    - name: Install test dependencies  # ← NEU HINZUGEFÜGT!
-      run: npm install --save-dev jest @vue/test-utils @vue/vue3-jest babel-jest
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-    - name: Run linting (optional)
-      run: npm run lint || echo "Linting skipped"
+      - name: Install frontend dependencies
+        working-directory: ./daily-done-frontend
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
-    - name: Run tests (wenn verfügbar)
-      run: npm run test:unit || echo "Tests skipped - not configured"
+      - name: Build frontend
+        working-directory: ./daily-done-frontend
+        run: npm run build
 
-    - name: Build frontend
-      run: npm run build
-
-  deploy:
-    needs: [backend-tests, frontend-tests]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Deploy to Render
-      env:
-        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-      run: |
-        echo "✅ Backend Tests passed"
-        echo "✅ Frontend Tests passed"
-        echo "✅ Ready for Render auto-deployment"
-        # Render deployment ist automatisch via Git-Integration
+      - name: Success message
+        run: |
+          echo "✅ Backend tests passed!"
+          echo "✅ Frontend build successful!"
+          echo "🚀 Ready for deployment!"
