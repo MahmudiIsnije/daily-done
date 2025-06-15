@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Backend CI/CD Pipeline
 
 on:
   push:
@@ -32,45 +32,8 @@ jobs:
       - name: Build backend
         run: mvn clean package -DskipTests
 
-  frontend-build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        shell: bash
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-
-      - name: Cache npm dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install frontend dependencies
-        working-directory: ./daily-done-frontend
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
-
-      - name: Build frontend
-        working-directory: ./daily-done-frontend
-        run: npm run build
-
       - name: Success message
         run: |
-          echo "✅ Backend tests passed!"
-          echo "✅ Frontend build successful!"
-          echo "🚀 Ready for deployment!"
+          echo " Backend tests passed!"
+          echo " Backend build successful!"
+          echo " Backend ready for Render deployment!"
