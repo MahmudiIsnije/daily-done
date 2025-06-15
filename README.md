@@ -1,91 +1,75 @@
-# Daily-Done
+# Daily-Done - Habit Tracking App
+Eine moderne Webanwendung zur Verwaltung und Verfolgung von täglichen Gewohnheiten.
 
-## Teammitglieder
-
-- Isnije Mahmudi
+## Live Demo
+Deployed App: https://daily-done-qztv.onrender.com
 
 ----
 
 ## Projektbeschreibung
-DailyDone ist eine benutzerfreundliche Habit-Tracking-App, die entwickelt wurde,
-um Menschen dabei zu helfen, positive Gewohnheiten aufzubauen und beizubehalten.
-Mit einem modernen Pastell-Design und motivierenden Features macht es Spaß, täglich Fortschritte zu verfolgen.
-Die App bietet ein umfassendes System zum Verwalten von Gewohnheiten mit Kategorien,
-Streak-Tracking und visueller Fortschrittsverfolgung. Nutzer können ihre täglichen Routinen wie
-„Wasser trinken", „Joggen gehen" oder „Buch lesen" organisiert verfolgen und durch das Streak-System zusätzlich motiviert werden.
+Daily Done ist eine Full-Stack-Webanwendung, die es Benutzern ermöglicht:
+
+- Tägliche Gewohnheiten zu erstellen und zu verwalten
+- Gewohnheiten verschiedenen Kategorien zuzuordnen
+- Fortschritte zu verfolgen und zu visualisieren
+- Eine intuitive Benutzeroberfläche zu nutzen
 
 ---
 
-## Use Cases
-### Habit-Management
-- Neue Gewohnheiten erstellen
-- Gewohnheiten bearbeiten (inline editing)
-- Gewohnheiten löschen
-- Alle Gewohnheiten anzeigen
-
-### Kategorie-System 
-- 6 vordefinierte Kategorien mit farbigen Icons
-- Filter nach Kategorien
-- Habit-Counter pro Kategorie
-- Zwischen "Alle Habits" und Kategorien wechseln
-
-### Streak-System
-- Aktuelle Streak-Anzeige (Tage hintereinander)
-- Rekord-Streak tracking und Anzeige
-- Motivierende Badges (🔥 aktuell, 🏆 Rekord)
-
-### Progress-Tracking
-- Tägliches Abhaken (einmal pro Tag)
-- Progress-Bars für visuellen Fortschritt
-- "Heute erledigt" Status anzeigen
-- Verhinderung von Mehrfach-Checks
-
-### Kalender-Integration
-- Monats-Kalender mit Aktivitäts-Punkten
-- Farbcodierte Darstellung nach Kategorien
-- Hover-Tooltips mit Habit-Namen
-- "Heute erledigt" Übersicht im Kalender-Bereich
-
-### UI/UX Features
-- Responsive Design (Desktop + Mobile)
-- Smooth Animationen und Hover-Effekte
-- Modernes Pastell-Design mit Glassmorphism
-
-
 ## Technologie-Stack
-- Backend
+Backend
 
-Spring Boot (Java)
-JPA/Hibernate für Datenbankzugriffe
-PostgreSQL (Production) / H2 (Development)
-REST API mit CORS-Unterstützung
+- Spring Boot 3.x - REST API Framework
+- Java 17 - Programmiersprache
+- PostgreSQL - Produktionsdatenbank
+- H2 - Test-Datenbank
+- Maven - Build Management
+- JUnit 5 - Testing Framework
 
-- Frontend
+Frontend
 
-Vue.js 3 mit Composition API
-V-Calendar für Kalender-Funktionalität
-Custom CSS mit modernem Pastell-Design
-Responsive Grid Layout
+- Vue.js 3 - JavaScript Framework
+- Vue Router - Client-side Routing
+- Axios - HTTP Client
+- CSS3 - Styling
+- Jest - Testing Framework
 
-## 📊 API-Endpoints
-### Habits
+Deployment & DevOps
 
-- GET /api/habits - Alle Habits abrufen
-- POST /api/habits - Neues Habit erstellen
-- PUT /api/habits/{id} - Habit bearbeiten
-- DELETE /api/habits/{id} - Habit löschen
-- POST /api/habits/{id}/check - Habit heute abhaken
+- Render - Cloud Hosting Platform
+- GitHub Actions - CI/CD Pipeline
+- Git - Versionskontrolle
 
-### Kategorien
+## Installation & Setup
+Voraussetzungen
 
-- GET /api/categories - Alle Kategorien abrufen
+- Java 17 oder höher
+- Node.js 16 oder höher
+- Maven 3.6+
+- PostgreSQL (für Produktion)
+
+--- 
+
+# API Endpoints
+
+## Habits
+
+- GET /api/habits - Alle Gewohnheiten abrufen 
+- POST /api/habits - Neue Gewohnheit erstellen 
+- GET /api/habits/{id} - Bestimmte Gewohnheit abrufen 
+- PUT /api/habits/{id} - Gewohnheit aktualisieren 
+- DELETE /api/habits/{id} - Gewohnheit löschen
+
+## Categories
+
+- GET /api/categories - Alle Kategorien abrufen 
 - POST /api/categories - Neue Kategorie erstellen
+- GET /api/categories/{id} - Bestimmte Kategorie abrufen 
+- PUT /api/categories/{id} - Kategorie aktualisieren 
+- DELETE /api/categories/{id} - Kategorie löschen
 
-### Streaks
+---
 
-- GET /api/habits/{id}/streaks - Streak-Daten für einzelnes Habit
-- GET /api/habits/streaks/all - Streak-Daten für alle Habits
+## Teammitglieder
 
-### Kalender
-
-- GET /api/habits/checks/month/{yearMonth} - Monatliche Aktivitätsdaten
+- Isnije Mahmudi
