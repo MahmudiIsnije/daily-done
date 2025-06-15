@@ -1,10 +1,13 @@
+/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/DailydoneApplication.java
+/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/service/HabitService.java
+/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/HabitRepository.java
+/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/WebConfig.java
+/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/service/CategoryService.java
+/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/HabitCheck.java
+/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/InitHabits.java
 /Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/Category.java
 /Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/Habit.java
 /Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/HabitController.java
 /Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/CategoryRepository.java
 /Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/HabitCheckRepository.java
 /Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/CategoryController.java
-/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/DailydoneApplication.java
-/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/HabitRepository.java
-/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/HabitCheck.java
-/Users/isi/Desktop/Projekt/daily-done/src/main/java/com/dailydone/dailydone/InitHabits.java

@@ -5,17 +5,18 @@ import java.time.LocalDate;
 
 @Entity
 public class HabitCheck {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "habit_id")
+    @JoinColumn(name = "habit_id", nullable = false)
     private Habit habit;
 
+    @Column(nullable = false)
     private LocalDate date;
 
-    // Constructors
     public HabitCheck() {}
 
     public HabitCheck(Habit habit, LocalDate date) {
@@ -23,7 +24,7 @@ public class HabitCheck {
         this.date = date;
     }
 
-    // Getter und Setter
+    // Getters und Setters
     public Long getId() {
         return id;
     }
@@ -46,5 +47,14 @@ public class HabitCheck {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "HabitCheck{" +
+                "id=" + id +
+                ", habit=" + (habit != null ? habit.getName() : "null") +
+                ", date=" + date +
+                '}';
     }
 }
