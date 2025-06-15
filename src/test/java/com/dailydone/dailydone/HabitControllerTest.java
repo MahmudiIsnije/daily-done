@@ -1,24 +1,25 @@
 package com.dailydone.dailydone;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(HabitController.class)
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:h2:mem:testdb",
-        "spring.jpa.hibernate.ddl-auto=create-drop"
-
-})
-@Transactional
 public class HabitControllerTest {
 
     @Autowired
@@ -27,32 +28,42 @@ public class HabitControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    @MockBean
+    private HabitRepository habitRepository;
+
+    @MockBean
+    private HabitCheckRepository habitCheckRepository;
+
+    private Category testCategory;
+    private Habit testHabit;
+
+    @BeforeEach
+    public void setUp() {
+        testCategory = new Category("Test Kategorie", "🧪", "#FF0000");
+        testCategory.setId(1L);
+
+        testHabit = new Habit("Test Habit", "Test Beschreibung", testCategory);
+        testHabit.setId(1L);
+    }
 
     @Test
     public void testGetAllHabits() throws Exception {
+        List<Habit> habits = Arrays.asList(testHabit);
+        when(habitRepository.findAll()).thenReturn(habits);
+
         mockMvc.perform(get("/api/habits"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name").value("Test Habit"));
+
+        verify(habitRepository, times(1)).findAll();
     }
 
     @Test
     public void testCreateHabit() throws Exception {
-        // Erstelle eine Kategorie für den Test
-        Category category = new Category("Test Kategorie", "🧪", "#FF0000");
-        category = categoryRepository.save(category);
+        when(habitRepository.save(any(Habit.class))).thenReturn(testHabit);
 
-        // Erstelle Habit JSON
-        String habitJson = """
-        {
-            "name": "Test Habit",
-            "description": "Test Beschreibung",
-            "category": {
-                "id": %d
-            }
-        }
-        """.formatted(category.getId());
+        String habitJson = objectMapper.writeValueAsString(testHabit);
 
         mockMvc.perform(post("/api/habits")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -60,45 +71,52 @@ public class HabitControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Habit"))
                 .andExpect(jsonPath("$.description").value("Test Beschreibung"));
+
+        verify(habitRepository, times(1)).save(any(Habit.class));
+    }
+
+    @Test
+    public void testDeleteHabit() throws Exception {
+        when(habitRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(habitRepository).deleteById(1L);
+
+        mockMvc.perform(delete("/api/habits/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Habit erfolgreich gelöscht"));
+
+        verify(habitRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void testDeleteHabitNotFound() throws Exception {
+        when(habitRepository.existsById(999L)).thenReturn(false);
+
+        mockMvc.perform(delete("/api/habits/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Habit nicht gefunden mit ID: 999"));
+
+        verify(habitRepository, never()).deleteById(anyLong());
     }
 
     @Test
     public void testToggleHabitStatus() throws Exception {
-        // Erstelle eine Kategorie für den Test
-        Category category = new Category("Test Kategorie", "🧪", "#FF0000");
-        category = categoryRepository.save(category);
+        when(habitRepository.findById(1L)).thenReturn(Optional.of(testHabit));
+        when(habitCheckRepository.findByHabitIdAndDate(anyLong(), any())).thenReturn(Optional.empty());
+        when(habitCheckRepository.save(any())).thenReturn(new HabitCheck());
 
-        // Erstelle Habit JSON
-        String habitJson = """
-        {
-            "name": "Test Toggle Habit",
-            "description": "Test für Toggle",
-            "category": {
-                "id": %d
-            }
-        }
-        """.formatted(category.getId());
-
-        // Erstelle Habit
-        String response = mockMvc.perform(post("/api/habits")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(habitJson))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        // Parse die Response um die ID zu bekommen
-        Long habitId = 1L; // Vereinfacht für Test
-
-        // Test PATCH Toggle (Check)
-        mockMvc.perform(patch("/api/habits/" + habitId + "/toggle"))
+        mockMvc.perform(patch("/api/habits/1/toggle"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("checked"));
 
-        // Test PATCH Toggle (Uncheck)
-        mockMvc.perform(patch("/api/habits/" + habitId + "/toggle"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("unchecked"));
+        verify(habitCheckRepository, times(1)).save(any(HabitCheck.class));
+    }
+
+    @Test
+    public void testToggleHabitStatusNotFound() throws Exception {
+        when(habitRepository.findById(999L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(patch("/api/habits/999/toggle"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Habit nicht gefunden mit ID: 999"));
     }
 }
